@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<!--
+  POSManual - DevSys Honduras
+  Template: Factura Proforma (Ticket 80mm)
+  Basado en: Ticket Inversiones Buenos Aires S.A.
+  Impresora: Térmica 80mm / Carta (configurable)
+-->
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>
+  /* ── Variables de marca ── */
+  :root {
+    --azul:      #1B4F9B;
+    --azul-dark: #0D3672;
+    --blanco:    #FFFFFF;
+    --gris:      #f5f5f5;
+    --borde:     #cccccc;
+    --txt:       #1a1a1a;
+  }
+
+  /* ── Reset ticket ── */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 11px;
+    color: var(--txt);
+    background: var(--blanco);
+    width: 80mm;          /* ticket 80mm */
+    margin: 0 auto;
+  }
+
+  .ticket {
+    padding: 4mm 3mm;
+    width: 80mm;
+  }
+
+  /* ── Encabezado empresa ── */
+  .header {
+    text-align: center;
+    border-bottom: 1px dashed var(--borde);
+    padding-bottom: 4px;
+    margin-bottom: 4px;
+  }
+  .header .logo-text {
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--azul-dark);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .header .empresa-nombre {
+    font-size: 10px;
+    color: var(--azul);
+    font-weight: bold;
+  }
+  .header p {
+    font-size: 9px;
+    line-height: 1.4;
+    color: #444;
+  }
+
+  /* ── Tipo de documento ── */
+  .doc-type {
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--azul-dark);
+    background: var(--gris);
+    padding: 2px;
+    margin: 4px 0;
+    border: 1px solid var(--borde);
+    text-transform: uppercase;
+  }
+
+  /* ── Datos de la factura ── */
+  .factura-info {
+    margin-bottom: 4px;
+    font-size: 10px;
+  }
+  .factura-info .row {
+    display: flex;
+    justify-content: space-between;
+    line-height: 1.6;
+  }
+  .factura-info .label { color: #555; }
+  .factura-info .value { font-weight: bold; }
+
+  /* ── Cliente ── */
+  .cliente {
+    border-top: 1px dashed var(--borde);
+    border-bottom: 1px dashed var(--borde);
+    padding: 3px 0;
+    margin: 3px 0;
+    font-size: 10px;
+  }
+  .cliente .row {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* ── Tabla de artículos ── */
+  .items-header {
+    display: grid;
+    grid-template-columns: 4fr 1fr 2fr 2fr;
+    font-size: 9px;
+    font-weight: bold;
+    color: var(--azul-dark);
+    border-bottom: 1px solid var(--borde);
+    padding: 2px 0;
+    text-transform: uppercase;
+  }
+  .items-header .col-total,
+  .item-row .col-total { text-align: right; }
+  .items-header .col-qty,
+  .item-row .col-qty   { text-align: center; }
+  .items-header .col-price,
+  .item-row .col-price { text-align: right; }
+
+  .item-row {
+    display: grid;
+    grid-template-columns: 4fr 1fr 2fr 2fr;
+    font-size: 10px;
+    padding: 2px 0;
+    border-bottom: 1px dotted #eee;
+  }
+  .item-row .desc {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* ── Totales ── */
+  .totales {
+    border-top: 1px dashed var(--borde);
+    padding-top: 4px;
+    margin-top: 4px;
+  }
+  .totales .row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    line-height: 1.7;
+  }
+  .totales .row.total-final {
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--azul-dark);
+    border-top: 1px solid var(--borde);
+    border-bottom: 2px solid var(--azul-dark);
+    padding: 2px 0;
+    margin-top: 2px;
+  }
+
+  /* ── Pago ── */
+  .pago {
+    border-top: 1px dashed var(--borde);
+    padding-top: 3px;
+    margin-top: 3px;
+  }
+  .pago .row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    line-height: 1.7;
+  }
+  .pago .cambio {
+    font-weight: bold;
+    color: var(--azul-dark);
+    font-size: 11px;
+  }
+
+  /* ── Importe en letras ── */
+  .letras {
+    text-align: center;
+    font-size: 9px;
+    font-style: italic;
+    color: #333;
+    border-top: 1px dashed var(--borde);
+    padding-top: 3px;
+    margin-top: 3px;
+  }
+
+  /* ── Datos fiscales (SAR Honduras) ── */
+  .fiscal {
+    border-top: 1px dashed var(--borde);
+    padding-top: 3px;
+    margin-top: 3px;
+    font-size: 9px;
+    color: #444;
+  }
+  .fiscal .row {
+    display: flex;
+    justify-content: space-between;
+    line-height: 1.6;
+  }
+  .fiscal .cai {
+    text-align: center;
+    font-size: 9px;
+    font-weight: bold;
+    word-break: break-all;
+    margin: 2px 0;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    border-top: 1px dashed var(--borde);
+    margin-top: 4px;
+    padding-top: 4px;
+    text-align: center;
+    font-size: 9px;
+    color: #666;
+  }
+  .footer .promo {
+    font-weight: bold;
+    color: var(--azul);
+    font-size: 10px;
+  }
+  .footer .software {
+    font-size: 8px;
+    color: #999;
+    margin-top: 2px;
+  }
+
+  /* ── MODO IMPRESIÓN ── */
+  @media print {
+    body { width: 80mm; }
+    .ticket { padding: 2mm; }
+    /* Ocultar UI del navegador */
+    @page { margin: 0; size: 80mm auto; }
+  }
+</style>
+</head>
+<body>
+<div class="ticket" id="ticket-proforma">
+
+  <!-- ENCABEZADO EMPRESA -->
+  <div class="header">
+    <div class="logo-text">POSManual</div>
+    <div class="empresa-nombre">INVERSIONES BUENOS AIRES S.A.</div>
+    <p>Bo. Buenos Aires BLVD del norte</p>
+    <p>contiguo al Hospital del Valle</p>
+    <p>San Pedro Sula, Honduras</p>
+    <p>Tel. +504 2527-8133/8119</p>
+    <p>RTN: 05019009204111</p>
+    <p>Email: gerenciatexacoba@gmail.com</p>
+  </div>
+
+  <!-- TIPO DOCUMENTO -->
+  <div class="doc-type">★ FACTURA PROFORMA ★</div>
+
+  <!-- DATOS DE FACTURA -->
+  <div class="factura-info">
+    <div class="row">
+      <span class="label">Factura #:</span>
+      <span class="value">{{numero_factura}}</span>
+    </div>
+    <div class="row">
+      <span class="label">Fecha:</span>
+      <span class="value">{{fecha_hora}}</span>
+    </div>
+    <div class="row">
+      <span class="label">Atendido por:</span>
+      <span class="value">{{cajero}}</span>
+    </div>
+  </div>
+
+  <!-- CLIENTE -->
+  <div class="cliente">
+    <div class="row">
+      <span>CLIENTE: <strong>{{cliente_nombre}}</strong></span>
+    </div>
+    <div class="row">
+      <span>R.T.N.: {{cliente_rtn}}</span>
+    </div>
+  </div>
+
+  <!-- COLUMNAS ARTÍCULOS -->
+  <div class="items-header">
+    <span>DESCRIPCION</span>
+    <span class="col-qty">CANT</span>
+    <span class="col-price">P.UNIT</span>
+    <span class="col-total">TOTAL</span>
+  </div>
+
+  <!-- ARTÍCULOS (se generan dinámicamente) -->
+  <!-- {{#each items}} -->
+  <div class="item-row">
+    <span class="desc">{{nombre}}</span>
+    <span class="col-qty">{{cantidad}}</span>
+    <span class="col-price">{{precio_unitario}}</span>
+    <span class="col-total">{{subtotal}}</span>
+  </div>
+  <!-- {{/each}} -->
+
+  <!-- TOTALES -->
+  <div class="totales">
+    <div class="row">
+      <span>SUB TOTAL</span>
+      <span>L. {{subtotal}}</span>
+    </div>
+    <div class="row">
+      <span>(-) DESCUENTOS Y REBAJAS</span>
+      <span>L. {{descuento_total}}</span>
+    </div>
+    <div class="row">
+      <span>IMPORTE EXENTO:</span>
+      <span>L. {{importe_exento}}</span>
+    </div>
+    <div class="row">
+      <span>IMPORTE EXONERADO:</span>
+      <span>L. {{importe_exonerado}}</span>
+    </div>
+    <div class="row">
+      <span>IMPORTE GRAVADO AL 15%</span>
+      <span>L. {{importe_gravado_15}}</span>
+    </div>
+    <div class="row">
+      <span>I.S.V. 15%</span>
+      <span>L. {{isv_15}}</span>
+    </div>
+    <div class="row">
+      <span>IMPORTE GRAVADO AL 18%</span>
+      <span>L. {{importe_gravado_18}}</span>
+    </div>
+    <div class="row">
+      <span>I.S.V. 18%</span>
+      <span>L. {{isv_18}}</span>
+    </div>
+    <div class="row">
+      <span>SERVICIO SUGERIDO</span>
+      <span>L. {{servicio_sugerido}}</span>
+    </div>
+    <div class="row total-final">
+      <span>TOTAL A PAGAR</span>
+      <span>L. {{total}}</span>
+    </div>
+  </div>
+
+  <!-- PAGO -->
+  <div class="pago">
+    <div class="row">
+      <span>Forma de Pago:</span>
+      <span>{{metodo_pago}}</span>
+    </div>
+    <div class="row">
+      <span>Transacción al:</span>
+      <span>{{tipo_transaccion}}</span>
+    </div>
+    <div class="row">
+      <span>CAMBIO:</span>
+      <span class="cambio">L. {{cambio}}</span>
+    </div>
+    <div class="row">
+      <span>PENDIENTE DE PAGO:</span>
+      <span>L. {{pendiente}}</span>
+    </div>
+  </div>
+
+  <!-- IMPORTE EN LETRAS -->
+  <div class="letras">
+    Son: <strong>{{total_letras}} LEMPIRAS</strong>
+  </div>
+
+  <!-- DATOS FISCALES SAR -->
+  <div class="fiscal">
+    <div class="row">
+      <span>No. Orden Compra Exenta:</span>
+      <span>{{orden_exenta}}</span>
+    </div>
+    <div class="row">
+      <span>No. Constancia Registro Exonerado:</span>
+      <span>{{constancia_exonerado}}</span>
+    </div>
+    <div class="row">
+      <span>No. Identificativo SAG:</span>
+      <span>{{registro_sag}}</span>
+    </div>
+    <div class="cai">
+      C.A.I.: {{cai}}
+    </div>
+    <div class="row">
+      <span>Fecha Límite Emisión:</span>
+      <span>{{fecha_limite_cai}}</span>
+    </div>
+    <div style="font-size:8px; text-align:center; margin-top:2px;">
+      Rango: {{rango_inicio}} al {{rango_fin}}
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="promo">" La Factura es beneficio de todos, ¡Exijala! "</div>
+    <div style="margin-top:3px;">"Original / Cliente &nbsp;&nbsp; Copia / Emisor"</div>
+    <div class="software">** DevSys Honduras - POSManual **</div>
+  </div>
+
+</div>
+</body>
+</html>

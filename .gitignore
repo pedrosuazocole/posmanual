@@ -1,0 +1,40 @@
+# POSManual - DevSys Honduras
+# .gitignore — raíz del monorepo
+
+# ── Variables de entorno ──────────────────────────────────────
+.env
+.env.local
+.env.production
+.env.test
+server/.env
+
+# ── Dependencias ──────────────────────────────────────────────
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# ── Build de React ────────────────────────────────────────────
+client/dist/
+client/.vite/
+
+# ── Logs ─────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# ── Cobertura de pruebas ──────────────────────────────────────
+coverage/
+client/coverage/
+server/coverage/
+.nyc_output/
+
+# ── Editores ─────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ── Railway / Deploy ──────────────────────────────────────────
+.railway/

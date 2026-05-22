@@ -1,0 +1,36 @@
+{
+  "_comentario": "POSManual — DevSys Honduras",
+  "_descripcion": "Configuración de pruebas — server/package.json (agregar sección jest y scripts)",
+
+  "scripts_agregar": {
+    "test":         "jest --runInBand --detectOpenHandles --forceExit",
+    "test:watch":   "jest --watch",
+    "test:coverage":"jest --coverage --runInBand --detectOpenHandles --forceExit"
+  },
+
+  "devDependencies_agregar": {
+    "jest":          "^29.7.0",
+    "supertest":     "^7.0.0",
+    "@types/jest":   "^29.5.12"
+  },
+
+  "jest_config": {
+    "testEnvironment":  "node",
+    "testMatch":        ["**/tests/**/*.test.js"],
+    "testTimeout":      30000,
+    "setupFilesAfterFramework": [],
+    "collectCoverageFrom": [
+      "src/controllers/**/*.js",
+      "src/middlewares/**/*.js",
+      "!src/db/**"
+    ],
+    "coverageThresholds": {
+      "global": {
+        "branches":   70,
+        "functions":  80,
+        "lines":      80,
+        "statements": 80
+      }
+    }
+  }
+}

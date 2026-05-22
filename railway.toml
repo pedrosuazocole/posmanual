@@ -1,0 +1,17 @@
+# POSManual - DevSys Honduras
+# Archivo: railway.toml (raíz del repo)
+#
+# Estructura del repo:
+#   /client   → React + Vite (frontend)
+#   /server   → Express + PostgreSQL (backend API)
+#
+# Railway detecta este archivo y configura ambos servicios.
+
+[build]
+builder = "NIXPACKS"
+
+[deploy]
+healthcheckPath = "/health"
+healthcheckTimeout = 30
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
